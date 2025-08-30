@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechVision Solutions - Inovação em Automação e TI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header & Navigation */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+            position: relative;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+        
+        .nav-links .admin-badge {
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 5px;
+        }
+        
+        /* Admin Dropdown */
+        .admin-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            padding: 1rem;
+            display: none;
+            z-index: 1001;
+        }
+        
+        .admin-dropdown.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .admin-dropdown a {
+            color: var(--primary);
+            display: block;
+            padding: 0.5rem 0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .admin-dropdown a:hover {
+            color: var(--secondary);
+        }
+        
+        .admin-dropdown .divider {
+            height: 1px;
+            background: #eee;
+            margin: 0.5rem 0;
+        }
+        
+        /* Admin Login Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            display: none;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .admin-modal {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .admin-modal h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+        
+        .admin-modal .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .admin-modal label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .admin-modal input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .admin-modal .submit-btn {
+            background: var(--secondary);
+            color: white;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .admin-modal .submit-btn:hover {
+            background: #2980b9;
+        }
+        
+        .admin-modal .error-message {
+            color: var(--danger);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        /* Admin Panel */
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 2001;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+        
+        .admin-panel.active {
+            right: 0;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .admin-header h2 {
+            color: var(--primary);
+        }
+        
+        .close-admin {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary);
+        }
+        
+        .admin-section {
+            margin-bottom: 2rem;
+        }
+        
+        .admin-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-card {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-card h4 {
+            font-size: 1.8rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card p {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        
+        .admin-list {
+            list-style: none;
+        }
+        
+        .admin-list li {
+            padding: 0.8rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .status-new {
+            background: #e3f2fd;
+            color: var(--secondary);
+        }
+        
+        .status-read {
+            background: #e8f5e9;
+            color: var(--success);
+        }
+        
+        .admin-action {
+            color: var(--secondary);
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+        
+        .admin-form .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .admin-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .admin-form input,
+        .admin-form textarea,
+        .admin-form select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .admin-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .admin-form .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .btn-secondary {
+            background: #eee;
+            color: #333;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            background: linear-gradient(135deg, var(--primary) 0%, #1a2530 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeIn 1s ease;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            animation: fadeIn 1.5s ease;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Services Section */
+        .services {
+            padding: 80px 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            color: #777;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .service-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        /* About Section */
+        .about {
+            padding: 80px 0;
+            background-color: var(--light);
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 3rem;
+        }
+        
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .about-text h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .about-text p {
+            margin-bottom: 1.5rem;
+            color: #555;
+        }
+        
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+        }
+        
+        .about-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Partners Section */
+        .partners {
+            padding: 80px 0;
+            background: white;
+            text-align: center;
+        }
+        
+        .partners-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+        
+        .partner-card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 2rem;
+            width: 250px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .partner-card img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .partner-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .partner-card p {
+            color: #777;
+        }
+        
+        /* Contact Section */
+        .contact {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, #1a2530 100%);
+            color: white;
+        }
+        
+        .contact .section-title h2 {
+            color: white;
+        }
+        
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background: var(--secondary);
+            color: white;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background: #2980b9;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--secondary);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .admin-panel {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">Tech<span>Vision</span></a>
+                <ul class="nav-links">
+                    <li><a href="#services">Serviços</a></li>
+                    <li><a href="#about">Sobre</a></li>
+                    <li><a href="#partners">Parceiros</a></li>
+                    <li><a href="#contact">Contato</a></li>
+                    <li>
+                        <a href="#" id="admin-link">Área Admin</a>
+                        <div class="admin-dropdown" id="admin-dropdown">
+                            <a href="#" id="login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
+                            <div class="divider"></div>
+                            <a href="#"><i class="fas fa-chart-line"></i> Analytics</a>
+                            <a href="#"><i class="fas fa-envelope"></i> Mensagens</a>
+                            <a href="#"><i class="fas fa-cog"></i> Configurações</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Admin Login Modal -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="admin-modal">
+            <h3>Acesso Administrativo</h3>
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label for="admin-email">E-mail</label>
+                    <input type="email" id="admin-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="admin-password">Senha</label>
+                    <input type="password" id="admin-password" required>
+                </div>
+                <div class="error-message" id="login-error">Credenciais inválidas. Tente novamente.</div>
+                <button type="submit" class="submit-btn">Acessar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="admin-panel">
+        <div class="admin-header">
+            <h2>Painel Administrativo</h2>
+            <button class="close-admin" id="close-admin"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <div class="admin-section">
+            <h3>Visão Geral</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>24</h4>
+                    <p>Novos Contatos</p>
+                </div>
+                <div class="stat-card">
+                    <h4>12</h4>
+                    <p>Projetos Ativos</p>
+                </div>
+                <div class="stat-card">
+                    <h4>89%</h4>
+                    <p>Satisfação</p>
+                </div>
+                <div class="stat-card">
+                    <h4>R$ 56K</h4>
+                    <p>Faturamento</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="admin-section">
+            <h3>Últimas Mensagens</h3>
+            <ul class="admin-list">
+                <li>
+                    <div>
+                        <strong>João Silva</strong>
+                        <p>Interesse em automação com n8n</p>
+                    </div>
+                    <span class="status-badge status-new">NOVO</span>
+                </li>
+                <li>
+                    <div>
+                        <strong>Maria Santos</strong>
+                        <p>Consulta sobre desenvolvimento</p>
+                    </div>
+                    <span class="status-badge status-read">LIDO</span>
+                </li>
+                <li>
+                    <div>
+                        <strong>Empresa XYZ</strong>
+                        <p>Orçamento para infraestrutura</p>
+                    </div>
+                    <span class="status-badge status-read">LIDO</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="admin-section">
+            <h3>Gerenciar Conteúdo</h3>
+            <form class="admin-form">
+                <div class="form-group">
+                    <label for="content-title">Título</label>
+                    <input type="text" id="content-title">
+                </div>
+                <div class="form-group">
+                    <label for="content-type">Tipo de Conteúdo</label>
+                    <select id="content-type">
+                        <option value="service">Serviço</option>
+                        <option value="blog">Postagem de Blog</option>
+                        <option value="testimonial">Depoimento</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="content-description">Descrição</label>
+                    <textarea id="content-description"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Salvar</button>
+                    <button type="reset" class="btn-secondary">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Soluções Tecnológicas para o Futuro do seu Negócio</h1>
+            <p>Automação, desenvolvimento de sistemas e infraestrutura de TI com expertise e inovação para impulsionar sua empresa</p>
+            <a href="#contact" class="btn">Fale Conosco</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>Nossos Serviços</h2>
+                <p>Oferecemos soluções completas em tecnologia para empresas de todos os portes</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card fade-in">
+                    <div class="service-icon">🤖</div>
+                    <h3>Automação com n8n</h3>
+                    <p>Automatizamos processos de negócio com a poderosa ferramenta n8n, integrando sistemas e aumentando a eficiência operacional.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">💻</div>
+                    <h3>Desenvolvimento de Sistemas</h3>
+                    <p>Criamos soluções personalizadas em front-end и back-end, desde aplicações web até sistemas complexos sob medida.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">🌐</div>
+                    <h3>Infraestrutura de TI</h3>
+                    <p>Projetamos, implementamos e gerenciamos infraestruturas de tecnologia robustas e seguras para sua empresa.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">📊</div>
+                    <h3>Consultoria em TI</h3>
+                    <p>Análise especializada para identificar oportunidades de melhoria e implementar soluções tecnológicas estratégicas.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">🔒</div>
+                    <h3>Controle de Acesso</h3>
+                    <p>Sistemas seguros de controle de acesso e gestão de identidade para proteger seus dados e recursos.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">📑</div>
+                    <h3>Participação em Licitações</h3>
+                    <p>Preparação e participação em processos licitatórios para fornecimento de soluções tecnológicas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Sobre a TechVision Solutions</h2>
+                    <p>Somos uma empresa especializada em soluções tecnológicas inovadoras, focada em automação, desenvolvimento de sistemas e infraestrutura de TI. Nossa missão é transformar desafios complexos em soluções eficientes através da tecnologia.</p>
+                    <p>Com anos de experiência no mercado, nossa equipe combina conhecimento técnico aprofundado com visão estratégica para entregar resultados excepcionais aos nossos clientes, tanto do setor privado quanto governamental.</p>
+                    <p>Na TechVision, acreditamos que a tecnologia deve ser uma aliada estratégica para o crescimento dos negócios, e não apenas um suporte operacional.</p>
+                    <a href="#contact" class="btn">Saiba Mais</a>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Equipe TechVision">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section class="partners" id="partners">
+        <div class="container">
+            <div class="section-title">
+                <h2>Nossos Especialistas</h2>
+                <p>Conheça a equipe por trás da TechVision Solutions</p>
+            </div>
+            <div class="partners-grid">
+                <div class="partner-card fade-in">
+                    <img src="https://cdn.pixabay.com/photo/2024/06/22/22/56/man-8847069_1280.jpg" alt="Especialista em Automação">
+                    <h3>Luiz</h3>
+                    <p>Especialista em Automação e n8n</p>
+                </div>
+                <div class="partner-card fade-in">
+                    <img src="https://media.istockphoto.com/id/1324558913/pt/foto/confident-young-man-in-casual-green-shirt-looking-away-standing-with-crossed-arms-isolated-on.jpg?s=2048x2048&w=is&k=20&c=sO9WhLstrRceQ7xdtxsUIU695xFueOBaGtihbb2NfCE=" alt="Desenvolvedora Full-Stack">
+                    <h3>Herivaldo Junior</h3>
+                    <p>Desenvolvedora Full-Stack  Devops</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Entre em Contato</h2>
+                <p>Pronto para transformar sua empresa? Fale conosco hoje mesmo</p>
+            </div>
+            <form class="contact-form" id="main-contact-form">
+                <div class="form-group">
+                    <label for="name">Nome</label>
+                    <input type="text" id="name" placeholder="Seu nome completo" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" placeholder="Seu melhor e-mail" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Mensagem</label>
+                    <textarea id="message" placeholder="Como podemos ajudar?" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Enviar Mensagem</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <a href="#" class="logo">Tech<span>Vision</span></a>
+                <p>Inovação e excelência em soluções tecnológicas</p>
+                <div class="social-links">
+                    <a href="#">📱</a>
+                    <a href="#">💼</a>
+                    <a href="#">📧</a>
+                </div>
+                <p>&copy; 2025 TechVision Solutions. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dados de exemplo para a demonstração
+        const demoContacts = [
+            { name: "Luiz", message: "Interesse em automação com n8n", status: "new" },
+            { name: "Mario Santos", message: "Consulta sobre desenvolvimento", status: "read" },
+            { name: "Empresa XYZ", message: "Orçamento para infraestrutura", status: "read" }
+        ];
+
+        // Elementos da área administrativa
+        const adminLink = document.getElementById('admin-link');
+        const adminDropdown = document.getElementById('admin-dropdown');
+        const loginBtn = document.getElementById('login-btn');
+        const loginModal = document.getElementById('login-modal');
+        const adminPanel = document.getElementById('admin-panel');
+        const closeAdmin = document.getElementById('close-admin');
+        const adminLoginForm = document.getElementById('admin-login-form');
+        const loginError = document.getElementById('login-error');
+        const mainContactForm = document.getElementById('main-contact-form');
+
+        // Alternar dropdown administrativo
+        adminLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            adminDropdown.classList.toggle('show');
+        });
+
+        // Fechar dropdown ao clicar fora
+        document.addEventListener('click', function(e) {
+            if (!adminLink.contains(e.target) && !adminDropdown.contains(e.target)) {
+                adminDropdown.classList.remove('show');
+            }
+        });
+
+        // Abrir modal de login
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.classList.add('active');
+            adminDropdown.classList.remove('show');
+        });
+
+        // Fechar modal de login
+        loginModal.addEventListener('click', function(e) {
+            if (e.target === loginModal) {
+                loginModal.classList.remove('active');
+            }
+        });
+
+        // Fechar painel administrativo
+        closeAdmin.addEventListener('click', function() {
+            adminPanel.classList.remove('active');
+        });
+
+        // Processar login administrativo
+        adminLoginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+            
+            // Simulação de autenticação
+            if (email === 'admin@techvision.com' && password === 'admin123') {
+                loginModal.classList.remove('active');
+                adminPanel.classList.add('active');
+                loadAdminData();
+            } else {
+                loginError.style.display = 'block';
+                setTimeout(() => {
+                    loginError.style.display = 'none';
+                }, 3000);
+            }
+        });
+
+        // Carregar dados administrativos
+        function loadAdminData() {
+            // Em uma implementação real, aqui viria uma requisição AJAX para o servidor
+            console.log('Dados administrativos carregados');
+        }
+
+        // Processar formulário de contato
+        mainContactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // Simulação de envio
+            alert(`Obrigado, ${name}! Sua mensagem foi enviada com sucesso.`);
+            mainContactForm.reset();
+            
+            // Em uma implementação real, aqui viria uma requisição AJAX para o servidor
+        });
+
+        // Animação de scroll para os elementos
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInOptions = {
+                threshold: 0.3,
+                rootMargin: "0px 0px -50px 0px"
+            };
+            
+            const fadeInObserver = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, fadeInOptions);
+            
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+            
+            // Smooth scrolling para links de navegação
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
